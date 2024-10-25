@@ -5,7 +5,7 @@
  * @format
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -15,104 +15,95 @@ import {
   Text,
   useColorScheme,
   View,
+  Button,
+  Alert,
+  TextInput
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+function App() {
+  const [enteredGoal,setEnteredGoal] = useState()
+  const [goal,setGoal] = useState([])
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const goalInputHandler = (e)=>{
+    setEnteredGoal(e)
+    // setEnteredGoal('')
+  }
+  const goalAddHandler = () =>{
+    console.log("Goal-------",goal)
+    setGoal(currentGoal => [...currentGoal,enteredGoal])
+  }
+  console.log("finalgoal------",goal)
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+     //start creating first screen
+    //  <SafeAreaView>
+     <View style={styles.appContainer}>
+      <View style={styles.inputContainer}>
+        <TextInput 
+        style={styles.textInput}
+        placeholder='Enter your goal'
+        onChangeText={goalInputHandler}
+        value={goal}
+        />
+        <Button title='Add Goal' onPress={goalAddHandler}/>
+      </View>
+      <View style={styles.goalContainer}>
+        <ScrollView>
+        <Text style={styles.goal}>List of Goals........</Text>
+        {goal.map((item)=>(
+          <View key={item} style={styles.goalText}>
+            <Text style={styles.goalItem}>{item}</Text>
+          </View>
+        )
+        )}
+        </ScrollView>
+      </View>
+     </View>
+    //  </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  appContainer:{
+    flex:1,
+    paddingTop:50,
+    paddingHorizontal:16
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  inputContainer:{
+    flex:1,
+    flexDirection:'row',
+    justifyContent:'space-between',
+    alignItems:"center",
+    marginBottom:20,
+    borderBottomWidth:1,
+    borderBottomColor:'#ccc'
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  textInput:{
+    borderWidth:1,
+    borderColor:'#cccccc',
+    borderRadius:8,
+    width:'70%',
+    padding:8,
+    marginRight:6
   },
-  highlight: {
-    fontWeight: '700',
+  goalContainer:{
+    flex:5
   },
+  goal:{
+    fontSize:20,
+    fontWeight:'bold',
+    textAlign:'center'
+  },
+  goalText:{
+    margin:8,
+    padding:8,
+    backgroundColor:"#5e0acc",
+    borderRadius:8,
+  },
+  goalItem:{
+    color:"white",
+    padding:6
+  }
+  
 });
 
 export default App;
